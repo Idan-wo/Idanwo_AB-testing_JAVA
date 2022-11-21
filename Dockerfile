@@ -20,4 +20,4 @@ WORKDIR /usr/local/service
 # Install and setup
 RUN mvn clean package -Dmaven.test.skip=true
 
-CMD ["java", "-Dspring.profiles.active=base,live", "-jar", "/usr/local/service/target/Blogtracker-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-Dspring.profiles.active=dev", "-jar", "/usr/local/service/target/Idanwo_AB-testing_JAVA-0.0.1-SNAPSHOT.jar"]
