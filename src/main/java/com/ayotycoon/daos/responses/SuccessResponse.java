@@ -1,4 +1,4 @@
-package com.ayotycoon.daos.responses.generic;
+package com.ayotycoon.daos.responses;
 
 
 import com.ayotycoon.daos.responses.enums.SUCCESS_RESPONSES;

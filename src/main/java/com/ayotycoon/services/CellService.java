@@ -18,8 +18,6 @@ import java.util.Optional;
 import static java.util.Arrays.stream;
 
 @Slf4j
-// @CommonsLog
-
 @Service
 @AllArgsConstructor
 public class CellService {
@@ -39,16 +37,15 @@ public class CellService {
     }
 
     public Optional<Cell> isCellExist(String key) {
-
-        var o = cellRepository.findFirstByKey(key);
-        return o;
-
+        return cellRepository.findFirstByKey(key);
     }
 
 
     public Page<Cell> getCells(GenericParams params) {
-
-        return cellRepository.findBy(PageRequest.of(params.getPage(), params.getSize()));
+        var pageRequest = PageRequest.of(params.getPage(), params.getSize());
+        if(params.getKeys() != null)
+            return cellRepository.findAllByKeyIn(params.getKeys(), pageRequest);
+        return cellRepository.findBy(pageRequest);
     }
 
     public Optional<Cell> getCell(String key) {

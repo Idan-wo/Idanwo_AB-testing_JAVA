@@ -9,29 +9,18 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 
-
 @Order(1)
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class AppBootstrap implements CommandLineRunner {
     private final AppService appService;
-
-    /**
-     * Security
-     */
-
-
     @Override
     public void run(String... args) throws Exception {
-System.out.println("APP ID IS "+ appService.getId());
-
-
-
+        log.info("[APP ID] " + appService.getId());
 
 
     }
-
 
 
 }

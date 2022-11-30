@@ -2,6 +2,7 @@ package com.ayotycoon.services;
 
 
 import com.ayotycoon.utils.Util;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
@@ -18,6 +19,7 @@ public class AppService {
     private  String elasticSearchHost;
     private  String id = Util.generateRandomString(17);
     private  Integer elasticSearchPort;
+    private  ObjectMapper OM = new ObjectMapper();
 
 }
 

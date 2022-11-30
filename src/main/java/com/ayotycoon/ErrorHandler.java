@@ -4,7 +4,7 @@ package com.ayotycoon;
 
 
 import com.ayotycoon.exceptions.ExceptionWithHttpCode;
-import com.ayotycoon.daos.responses.generic.ErrorResponse;
+import com.ayotycoon.daos.responses.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

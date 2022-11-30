@@ -2,7 +2,8 @@ package com.ayotycoon.entities;
 
 import com.ayotycoon.daos.requests.CellOption;
 import com.ayotycoon.enums.CellType;
-import javafx.util.Pair;
+import com.ayotycoon.utils.Pair;
+import com.ayotycoon.utils.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,15 +37,7 @@ public class Cell {
     private LocalDateTime modifiedOn;
 
     public Pair<String, Object> toPair(){
-        Object parsedValue = value;
-        switch(type){
-            case INT:
-                parsedValue =  Integer.parseInt(value);
-                break;
-            case BOOLEAN:
-                parsedValue =  Boolean.parseBoolean(value);
-                break;
-        }
+        Object parsedValue = Util.typeParser(value, type);
         return new Pair<>(key,parsedValue);
     }
 

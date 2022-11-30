@@ -2,7 +2,8 @@ package com.ayotycoon.utils;
 
 import com.ayotycoon.daos.requests.CellOption;
 import com.ayotycoon.entities.Cell;
-import javafx.util.Pair;
+
+import com.ayotycoon.enums.CellType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
@@ -20,6 +21,10 @@ public class Util {
         if (!toPair) return cells;
         List<Pair<String, Object>> cellsList = cells.getContent().stream().map((Cell cell) -> cell.toPair()).collect(Collectors.toList());
         return new PageImpl<Pair<String, Object>>(cellsList, cells.getPageable(), cells.getTotalElements());
+    }
+
+    public static void cellValueRandomizer(Page<Cell> cells) {
+        for (Cell cell : cells) cellValueRandomizer(cell);
     }
 
     public static void cellValueRandomizer(Cell cell) {
@@ -50,9 +55,7 @@ public class Util {
             int ch = (int) (STRS.length() * Math.random());
             s.append(STRS.charAt(ch));
         }
-
         return s.toString();
-
     }
 
 
@@ -62,10 +65,23 @@ public class Util {
 
         for (CellOption pair : options) {
             if (pair.getProbability() < 0 || pair.getProbability() > 100)
-                throw new Exception("Pair " + pair.getValue() + " has invalid value of " + pair.getProbability()+"%");
+                throw new Exception("Pair " + pair.getValue() + " has invalid value of " + pair.getProbability() + "%");
             total += pair.getProbability();
         }
-        if (total < 0 || total > 100) throw new Exception("Total values in options must be 100");
+        if (total != 100) throw new Exception("Total values in options must be 100");
 
+    }
+
+    public static Object typeParser(String value, CellType type) {
+        switch (type) {
+            case INT:
+                return Integer.parseInt(value);
+
+            case BOOLEAN:
+                return Boolean.parseBoolean(value);
+
+        }
+
+        return value;
     }
 }

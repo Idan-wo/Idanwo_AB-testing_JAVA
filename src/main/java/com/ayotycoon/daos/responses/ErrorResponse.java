@@ -1,4 +1,4 @@
-package com.ayotycoon.daos.responses.generic;
+package com.ayotycoon.daos.responses;
 
 import lombok.Data;
 

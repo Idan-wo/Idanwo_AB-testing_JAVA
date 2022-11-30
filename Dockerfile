@@ -16,7 +16,7 @@ COPY src /usr/local/service/src
 COPY config /usr/local/service/config
 WORKDIR /usr/local/service
 # Install and setup
-EXPOSE 9011
+EXPOSE 8080
 RUN mvn clean package -Dmaven.test.skip=true
 RUN rm -rf /var/lib/apt/lists/*
 RUN rm -rf /var/cache/apt/archives
