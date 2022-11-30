@@ -10,6 +10,7 @@ RUN export JAVA_HOME=/usr/lib/jvm/openjdk-17-jdk
 RUN export PATH=$PATH:$JAVA_HOME/bin
 # RUN update-alternatives --config java
 RUN apt-get install -y maven
+
 COPY pom.xml /usr/local/service/pom.xml
 COPY src /usr/local/service/src
 COPY config /usr/local/service/config
