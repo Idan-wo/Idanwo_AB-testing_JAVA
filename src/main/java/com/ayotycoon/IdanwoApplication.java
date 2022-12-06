@@ -8,13 +8,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableMongoAuditing
-public class AbTestingApplication {
+public class IdanwoApplication {
 
 
 	public static void main(String[] args) {
 
 
-		SpringApplication.run(AbTestingApplication.class, args);
+		SpringApplication.run(IdanwoApplication.class, args);
 
 
 

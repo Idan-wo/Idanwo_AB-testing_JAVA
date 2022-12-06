@@ -2,13 +2,10 @@ package com.ayotycoon.services;
 
 
 import com.ayotycoon.utils.Util;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.utility.RandomString;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Slf4j
 @Service
@@ -19,7 +16,12 @@ public class AppService {
     private  String elasticSearchHost;
     private  String id = Util.generateRandomString(17);
     private  Integer elasticSearchPort;
-    private  ObjectMapper OM = new ObjectMapper();
+
+    @Value("${org.mode:false}")
+    private  boolean orgMode;
+    @Value("${org.header.id:org-id}")
+    private String orgIdHeader;
+
 
 }
 

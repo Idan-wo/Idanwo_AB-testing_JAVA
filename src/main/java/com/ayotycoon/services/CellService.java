@@ -3,7 +3,10 @@ package com.ayotycoon.services;
 import com.ayotycoon.daos.requests.CreateCellBody;
 import com.ayotycoon.daos.requests.GenericParams;
 import com.ayotycoon.entities.Cell;
+import com.ayotycoon.exceptions.OrgIdHeaderNotFoundException;
+import com.ayotycoon.exceptions.UnauthorizedException;
 import com.ayotycoon.repositories.CellRepository;
+import com.ayotycoon.security.ParsedToken;
 import com.ayotycoon.utils.Util;
 import com.ayotycoon.utils.WSManager;
 import lombok.AllArgsConstructor;
@@ -22,44 +25,66 @@ import static java.util.Arrays.stream;
 @AllArgsConstructor
 public class CellService {
     private final CellRepository cellRepository;
+    private final AuthService authService;
+    private final AppService appService;
 
 
     public Cell createCell(CreateCellBody body) throws Exception {
-        if (isCellExist(body.getKey()).isPresent()) throw new Exception("Email already exists");
-        var newsLetter = new Cell();
-        newsLetter.setKey(body.getKey());
-        newsLetter.setValue(body.getValue());
-        newsLetter.setType(body.getType());
-        newsLetter.setOptions(body.getOptions());
+        ParsedToken parsed = null;
+        if(appService.isOrgMode()) {
+            parsed = authService.getParsedToken();
+            if (cellRepository.findFirstByKeyAndOrgId(body.getKey(), parsed.getOrgId()).isPresent()) throw new Exception("Cell key already exists");
+        }else{
+            if (cellRepository.findFirstByKey(body.getKey()).isPresent()) throw new Exception("Cell key already exists");
+        }
+        Cell cell = new Cell();
+        cell.setKey(body.getKey());
+        cell.setValue(body.getValue());
+        cell.setType(body.getType());
+        cell.setOptions(body.getOptions());
+        if(appService.isOrgMode()) cell.setOrgId(parsed.getOrgId());
         Util.validateCellOptions(body.getOptions());
-        return cellRepository.save(newsLetter);
+        return cellRepository.save(cell);
 
     }
 
-    public Optional<Cell> isCellExist(String key) {
-        return cellRepository.findFirstByKey(key);
-    }
 
 
-    public Page<Cell> getCells(GenericParams params) {
+
+    public Page<Cell> getCells(GenericParams params) throws UnauthorizedException, OrgIdHeaderNotFoundException {
         var pageRequest = PageRequest.of(params.getPage(), params.getSize());
-        if(params.getKeys() != null)
-            return cellRepository.findAllByKeyIn(params.getKeys(), pageRequest);
-        return cellRepository.findBy(pageRequest);
+        if(appService.isOrgMode()) {
+            if (params.getKeys() != null)return cellRepository.findAllByKeyInAndOrgId(params.getKeys(), authService.getHeaderOrgId(), pageRequest);
+            return cellRepository.findFirstByOrgId(authService.getHeaderOrgId(), pageRequest);
+        }else{
+            if (params.getKeys() != null)return cellRepository.findAllByKeyIn(params.getKeys(), pageRequest);
+            return cellRepository.findBy(pageRequest);
+        }
     }
 
-    public Optional<Cell> getCell(String key) {
-        return cellRepository.findFirstByKey(key);
+    public Optional<Cell> getCell(String key) throws UnauthorizedException, OrgIdHeaderNotFoundException {
+        if(appService.isOrgMode()) {
+            return cellRepository.findFirstByKeyAndOrgId(key, authService.getHeaderOrgId());
+        }else {
+            return cellRepository.findFirstByKey(key);
+        }
     }
 
     public Cell patchCellValue(String key, String value) throws Exception{
-        var o = isCellExist(key);
+        ParsedToken parsed = null;
+        Optional<Cell> o = null;
+        if(appService.isOrgMode()) {
+            parsed = authService.getParsedToken();
+            o = cellRepository.findFirstByKeyAndOrgId(key, parsed.getOrgId());
+        }
+        else o = cellRepository.findFirstByKey(key);
+
         if (!o.isPresent()) throw new Exception("Cell doesnt exist");
 
         Cell cell = o.get();
         cell.setValue(value);
         WSManager.broadcastKeyChanges(key,cell);
-
+        if (appService.isOrgMode()) cell.setOrgId(parsed.getOrgId());
         return cellRepository.save(cell);
 
     }

@@ -7,6 +7,7 @@ import com.ayotycoon.utils.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,7 +31,7 @@ public class Cell {
     private String value;
     private CellType type = CellType.STRING;
     private List<CellOption> options;
-
+    private ObjectId orgId;
     @CreatedDate
     private LocalDateTime createdOn;
     @LastModifiedDate
@@ -39,6 +40,11 @@ public class Cell {
     public Pair<String, Object> toPair(){
         Object parsedValue = Util.typeParser(value, type);
         return new Pair<>(key,parsedValue);
+    }
+
+    public void setOrgId(String orgId){
+
+        this.orgId = new ObjectId(orgId);
     }
 
 

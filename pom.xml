@@ -15,10 +15,10 @@ Description: Stores the common configuration of the application
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ayotycoon</groupId>
-	<artifactId>Idanwo_AB-testing_JAVA</artifactId>
+	<artifactId>Idanwo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Idanwo</name>
-	<description>Idanwo_AB-testing_JAVA</description>
+	<description>Idanwo</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -41,7 +41,27 @@ Description: Stores the common configuration of the application
 			<artifactId>javax.persistence-api</artifactId>
 
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+			<version>0.11.2</version>
+			<scope>runtime</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

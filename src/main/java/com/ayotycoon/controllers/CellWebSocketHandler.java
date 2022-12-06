@@ -1,6 +1,7 @@
 package com.ayotycoon.controllers;
 
 import com.ayotycoon.services.AppService;
+import com.ayotycoon.services.CONSTANTS;
 import com.ayotycoon.utils.WSManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -32,8 +33,10 @@ public class CellWebSocketHandler extends AbstractWebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         log.info("[Received Message] " + message.getPayload());
         try {
-            List<String> keys = appService.getOM().readValue(message.getPayload().toString(), List.class);
-            for (String key : keys) WSManager.putSessionAndKey(session, key);
+            List<String> keys = CONSTANTS.OM.readValue(message.getPayload().toString(), List.class);
+            for (String key : keys) {
+                WSManager.putSessionAndKey(session, key);
+            }
         } catch (Exception e) {
             log.info("Could not parse message to list  " + e);
         }
