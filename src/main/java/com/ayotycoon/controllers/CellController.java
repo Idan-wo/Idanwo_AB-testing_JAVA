@@ -6,7 +6,6 @@ import com.ayotycoon.daos.requests.GenericParams;
 import com.ayotycoon.daos.responses.enums.SUCCESS_RESPONSES;
 import com.ayotycoon.daos.responses.SuccessResponse;
 import com.ayotycoon.services.CellService;
-import com.ayotycoon.services.OrganisationService;
 import com.ayotycoon.utils.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

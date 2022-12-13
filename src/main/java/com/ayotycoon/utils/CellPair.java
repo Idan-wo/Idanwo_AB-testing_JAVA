@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class Pair <A,B>{
+public class CellPair<A,B>{
     private A key;
     private B value;
 

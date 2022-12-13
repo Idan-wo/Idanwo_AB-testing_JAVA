@@ -20,6 +20,7 @@ public interface CellRepository extends MongoRepository<Cell,String> {
     Page<Cell> findAllByKeyIn(List<String> keys, Pageable page);
     Page<Cell> findAllByKeyInAndOrgId(List<String> keys, String id, Pageable page);
     Optional<Cell> findFirstByKey(String key);
+    Cell findFirstBy();
     Optional<Cell> findFirstByKeyAndOrgId(String key, String id);
 
 

@@ -19,8 +19,8 @@ public class Util {
 
     public static Page cellToConditionalPair(Page<Cell> cells, boolean toPair) {
         if (!toPair) return cells;
-        List<Pair<String, Object>> cellsList = cells.getContent().stream().map((Cell cell) -> cell.toPair()).collect(Collectors.toList());
-        return new PageImpl<Pair<String, Object>>(cellsList, cells.getPageable(), cells.getTotalElements());
+        List<CellPair<String, Object>> cellsList = cells.getContent().stream().map((Cell cell) -> cell.toPair()).collect(Collectors.toList());
+        return new PageImpl<CellPair<String, Object>>(cellsList, cells.getPageable(), cells.getTotalElements());
     }
 
     public static void cellValueRandomizer(Page<Cell> cells) {

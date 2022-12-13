@@ -27,34 +27,28 @@ public class AuthService {
     private final AppService appService;
 
     public User getAuthUser() throws UnauthorizedException {
-        try {
-            String id = getParsedToken().getUserId();
-            User user = userRepository.findFirstById(id);
-            return user;
-        }catch (Exception e){
-            throw new UnauthorizedException();
-        }
+        String id = getParsedToken().getUserId();
+        User user = userRepository.findFirstById(id);
+        return user;
     }
+
     public Organisation getAuthOrg() throws UnauthorizedException {
-        try {
-            String orgId = getParsedToken().getOrgId();
-            return organisationRepository.findFirstById(orgId);
-        }catch (Exception e){
-            throw new UnauthorizedException();
-        }
+        String orgId = getParsedToken().getOrgId();
+        return organisationRepository.findFirstById(orgId);
     }
 
     public ParsedToken getParsedToken() throws UnauthorizedException {
         try {
             return new ParsedToken((Claims) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new UnauthorizedException();
         }
     }
-    public String getHeaderOrgId() throws OrgIdHeaderNotFoundException {
-        String val =  request.getHeader(appService.getOrgIdHeader());
 
-        if(Strings.isNullOrEmpty(val)) throw new OrgIdHeaderNotFoundException();
+    public String getHeaderOrgId() throws OrgIdHeaderNotFoundException {
+        String val = request.getHeader(appService.getOrgIdHeader());
+
+        if (Strings.isNullOrEmpty(val)) throw new OrgIdHeaderNotFoundException(appService.getOrgIdHeader());
         return val;
     }
 }

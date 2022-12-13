@@ -38,7 +38,7 @@ public class User {
     @LastModifiedDate
     private LocalDateTime modifiedOn;
 
-    public void setRoles(UserRole userRole){
+    public void setRole(UserRole userRole){
         roles.add(userRole);
     }
 

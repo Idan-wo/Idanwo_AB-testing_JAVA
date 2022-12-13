@@ -3,12 +3,13 @@ package com.ayotycoon.services;
 import com.ayotycoon.daos.requests.CreateCellBody;
 import com.ayotycoon.daos.requests.GenericParams;
 import com.ayotycoon.entities.Cell;
+import com.ayotycoon.exceptions.CellKeyAlreadyExistsException;
 import com.ayotycoon.exceptions.OrgIdHeaderNotFoundException;
 import com.ayotycoon.exceptions.UnauthorizedException;
 import com.ayotycoon.repositories.CellRepository;
 import com.ayotycoon.security.ParsedToken;
 import com.ayotycoon.utils.Util;
-import com.ayotycoon.utils.WSManager;
+import com.ayotycoon.services.WSManager.WSManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static java.util.Arrays.stream;
 
 @Slf4j
 @Service
@@ -27,15 +27,16 @@ public class CellService {
     private final CellRepository cellRepository;
     private final AuthService authService;
     private final AppService appService;
+    private final WSManager wsManager;
 
 
-    public Cell createCell(CreateCellBody body) throws Exception {
+    public Cell createCell(CreateCellBody body) throws CellKeyAlreadyExistsException, UnauthorizedException, Exception {
         ParsedToken parsed = null;
         if(appService.isOrgMode()) {
             parsed = authService.getParsedToken();
-            if (cellRepository.findFirstByKeyAndOrgId(body.getKey(), parsed.getOrgId()).isPresent()) throw new Exception("Cell key already exists");
+            if (cellRepository.findFirstByKeyAndOrgId(body.getKey(), parsed.getOrgId()).isPresent()) throw new CellKeyAlreadyExistsException();
         }else{
-            if (cellRepository.findFirstByKey(body.getKey()).isPresent()) throw new Exception("Cell key already exists");
+            if (cellRepository.findFirstByKey(body.getKey()).isPresent()) throw new CellKeyAlreadyExistsException();
         }
         Cell cell = new Cell();
         cell.setKey(body.getKey());
@@ -83,7 +84,7 @@ public class CellService {
 
         Cell cell = o.get();
         cell.setValue(value);
-        WSManager.broadcastKeyChanges(key,cell);
+        wsManager.broadcastKeyChanges(key,cell);
         if (appService.isOrgMode()) cell.setOrgId(parsed.getOrgId());
         return cellRepository.save(cell);
 

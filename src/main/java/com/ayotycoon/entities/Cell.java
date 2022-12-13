@@ -2,7 +2,7 @@ package com.ayotycoon.entities;
 
 import com.ayotycoon.daos.requests.CellOption;
 import com.ayotycoon.enums.CellType;
-import com.ayotycoon.utils.Pair;
+import com.ayotycoon.utils.CellPair;
 import com.ayotycoon.utils.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,9 +37,9 @@ public class Cell {
     @LastModifiedDate
     private LocalDateTime modifiedOn;
 
-    public Pair<String, Object> toPair(){
+    public CellPair<String, Object> toPair(){
         Object parsedValue = Util.typeParser(value, type);
-        return new Pair<>(key,parsedValue);
+        return new CellPair<>(key,parsedValue);
     }
 
     public void setOrgId(String orgId){
