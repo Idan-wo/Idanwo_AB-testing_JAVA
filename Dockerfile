@@ -22,4 +22,4 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN rm -rf /var/cache/apt/archives
 RUN apt-get clean
 
-CMD ["java", "-Dspring.profiles.active=server", "-jar", "--enable-preview","/usr/local/service/target/Idanwo    s-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-Dspring.profiles.active=server", "-jar", "--enable-preview","/usr/local/service/target/Idanwo-0.0.1-SNAPSHOT.jar"]
