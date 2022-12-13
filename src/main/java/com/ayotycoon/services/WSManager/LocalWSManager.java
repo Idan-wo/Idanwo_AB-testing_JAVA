@@ -64,7 +64,7 @@ public class LocalWSManager implements WSManager {
 
     @Override
     public void broadcastKeyChanges(String key, Cell cell) throws Exception {
-        stringRedisTemplate.convertAndSend(CONSTANTS.redisSubKey, new RedisPubSubMessage(appService.getId(), cell.getKey(), cell.getValue(), cell.getType(), cell.getOrgId().toString()).toString());
+        stringRedisTemplate.convertAndSend(CONSTANTS.redisSubKey, new RedisPubSubMessage(appService.getId(), cell.getKey(), cell.getValue(), cell.getType(), appService.isOrgMode()? cell.getOrgId().toString() : null).toString());
         log.info("Broadcasted message");
         //        for (WebSocketSession session : getSessionsByKey(key)) session.sendMessage(new TextMessage(cell.toPair().toJSON(cell.getType())));
     }

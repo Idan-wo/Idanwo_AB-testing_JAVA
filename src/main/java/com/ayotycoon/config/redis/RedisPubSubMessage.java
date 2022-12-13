@@ -44,6 +44,6 @@ public class RedisPubSubMessage {
     }
     public static RedisPubSubMessage fromString(String s){
         String [] arr = s.split("\\|");
-        return new RedisPubSubMessage(arr[0],arr[1],arr[2],CellType.valueOf(arr[3]), arr.length >=4 ? arr[4] : null);
+        return new RedisPubSubMessage(arr[0],arr[1],arr[2],CellType.valueOf(arr[3]), arr.length > 4 ? arr[4] : null);
     }
 }

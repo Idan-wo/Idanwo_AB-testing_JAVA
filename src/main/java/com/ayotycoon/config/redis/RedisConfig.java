@@ -4,6 +4,7 @@ package com.ayotycoon.config.redis;
 import com.ayotycoon.services.CONSTANTS;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,12 +23,17 @@ public class RedisConfig  {
     private String redisHost;
     @Value("${redis.port:6379}")
     private Integer redisPort;
+    @Value("${redis.password:}")
+    private String redisPassword;
+    @Value("${redis.user:}")
+    private String redisUser;
 
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory jedisConFactory
-                = new JedisConnectionFactory();
+        JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();
+        if(Strings.isNotEmpty(redisUser))jedisConFactory.setPassword(redisUser);
+        if(Strings.isNotEmpty(redisPassword))jedisConFactory.setPassword(redisPassword);
         jedisConFactory.setHostName(redisHost);
         jedisConFactory.setPort(redisPort);
         return jedisConFactory;
