@@ -44,12 +44,17 @@ public class AppBootstrap implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         log.info("[APP ID] " + appService.getId());
         CONSTANTS.userHeaderName = userHeaderName;
         CONSTANTS.userKey = userKey;
         CONSTANTS.userExpirationTime = userExpirationTime;
         CONSTANTS.wsManager = wsManager;
         CONSTANTS.redisSubKey = redisSubKey;
+
+    }
+    private void clearTest(){
+        if(!appService.isEnvTest()) return;
 
     }
 

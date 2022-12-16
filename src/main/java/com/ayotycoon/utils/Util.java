@@ -4,10 +4,13 @@ import com.ayotycoon.daos.requests.CellOption;
 import com.ayotycoon.entities.Cell;
 
 import com.ayotycoon.enums.CellType;
+import com.ayotycoon.exceptions.CellException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Util {
@@ -59,16 +62,16 @@ public class Util {
     }
 
 
-    public static void validateCellOptions(List<CellOption> options) throws Exception {
+    public static void validateCellOptions(List<CellOption> options) throws CellException.IncorrectCell {
         if (options == null || options.size() == 0) return;
         double total = 0;
 
         for (CellOption pair : options) {
             if (pair.getProbability() < 0 || pair.getProbability() > 100)
-                throw new Exception("Pair " + pair.getValue() + " has invalid value of " + pair.getProbability() + "%");
+                throw new CellException.IncorrectCell("Pair " + pair.getValue() + " has invalid value of " + pair.getProbability() + "%");
             total += pair.getProbability();
         }
-        if (total != 100) throw new Exception("Total values in options must be 100");
+        if (total != 100) throw new CellException.IncorrectCell("Total values in options must be 100");
 
     }
 
@@ -83,5 +86,21 @@ public class Util {
         }
 
         return value;
+    }
+
+    public static CellType assumeType(String value) {
+       if(value.equals("false") || value.equals("true"))return CellType.BOOLEAN;
+        try {
+            Integer.parseInt(value);
+            return CellType.INT;
+        } catch (Exception e) {
+        }
+
+        return CellType.STRING;
+    }
+    public static boolean isValidKey(String str)
+    {
+        if (str == null)return false;
+        return Pattern.compile("^[A-Za-z]\\w{2,}$").matcher(str).matches();
     }
 }

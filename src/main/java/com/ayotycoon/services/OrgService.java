@@ -8,7 +8,7 @@ import com.ayotycoon.entities.Organisation;
 import com.ayotycoon.entities.User;
 import com.ayotycoon.enums.UserRole;
 import com.ayotycoon.exceptions.UnauthorizedException;
-import com.ayotycoon.exceptions.UserAlreadyExistsException;
+import com.ayotycoon.exceptions.UserException;
 import com.ayotycoon.repositories.OrganisationRepository;
 import com.ayotycoon.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -29,8 +29,8 @@ public class OrgService {
 
 
 
-    public Organisation createOrg(CreateOrgBody body) throws UserAlreadyExistsException {
-        if(userRepository.findFirstByUsername(body.getAdminUsername()) != null) throw new  UserAlreadyExistsException();
+    public Organisation createOrg(CreateOrgBody body) throws UserException.AlreadyExists {
+        if(userRepository.findFirstByUsername(body.getAdminUsername()) != null) throw new UserException.AlreadyExists();
         var entity = new Organisation();
         var org =  organisationRepository.save(entity);
         var user = new User();
@@ -43,8 +43,8 @@ public class OrgService {
     }
 
 
-    public User addUserToOrg(AddUserToOrgBody body) throws UnauthorizedException, UserAlreadyExistsException {
-        if(userRepository.findFirstByUsername(body.getUsername()) != null) throw new UserAlreadyExistsException();
+    public User addUserToOrg(AddUserToOrgBody body) throws UnauthorizedException, UserException.AlreadyExists {
+        if(userRepository.findFirstByUsername(body.getUsername()) != null) throw new UserException.AlreadyExists();
         if(!authService.getAuthUser().getRoles().contains(UserRole.IS_ADMIN)) throw new UnauthorizedException();
 
         var user = new User();

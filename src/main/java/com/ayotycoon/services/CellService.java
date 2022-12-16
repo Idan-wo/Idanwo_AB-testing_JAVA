@@ -3,7 +3,9 @@ package com.ayotycoon.services;
 import com.ayotycoon.daos.requests.CreateCellBody;
 import com.ayotycoon.daos.requests.GenericParams;
 import com.ayotycoon.entities.Cell;
-import com.ayotycoon.exceptions.CellKeyAlreadyExistsException;
+
+import com.ayotycoon.enums.CellType;
+import com.ayotycoon.exceptions.CellException;
 import com.ayotycoon.exceptions.OrgIdHeaderNotFoundException;
 import com.ayotycoon.exceptions.UnauthorizedException;
 import com.ayotycoon.repositories.CellRepository;
@@ -15,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-
 import java.util.Optional;
 
 
@@ -30,13 +30,13 @@ public class CellService {
     private final WSManager wsManager;
 
 
-    public Cell createCell(CreateCellBody body) throws CellKeyAlreadyExistsException, UnauthorizedException, Exception {
+    public Cell createCell(CreateCellBody body) throws UnauthorizedException, CellException.KeyAlreadyExists, CellException.IncorrectCell {
         ParsedToken parsed = null;
         if(appService.isOrgMode()) {
             parsed = authService.getParsedToken();
-            if (cellRepository.findFirstByKeyAndOrgId(body.getKey(), parsed.getOrgId()).isPresent()) throw new CellKeyAlreadyExistsException();
+            if (cellRepository.findFirstByKeyAndOrgId(body.getKey(), parsed.getOrgId()).isPresent()) throw new CellException.KeyAlreadyExists();
         }else{
-            if (cellRepository.findFirstByKey(body.getKey()).isPresent()) throw new CellKeyAlreadyExistsException();
+            if (cellRepository.findFirstByKey(body.getKey()).isPresent()) throw new CellException.KeyAlreadyExists();
         }
         Cell cell = new Cell();
         cell.setKey(body.getKey());
@@ -52,7 +52,7 @@ public class CellService {
 
 
 
-    public Page<Cell> getCells(GenericParams params) throws UnauthorizedException, OrgIdHeaderNotFoundException {
+    public Page<Cell> getCells(GenericParams params) throws  OrgIdHeaderNotFoundException {
         var pageRequest = PageRequest.of(params.getPage(), params.getSize());
         if(appService.isOrgMode()) {
             if (params.getKeys() != null)return cellRepository.findAllByKeyInAndOrgId(params.getKeys(), authService.getHeaderOrgId(), pageRequest);
@@ -80,7 +80,12 @@ public class CellService {
         }
         else o = cellRepository.findFirstByKey(key);
 
-        if (!o.isPresent()) throw new Exception("Cell doesnt exist");
+        if (!o.isPresent()) throw new CellException.KeyDoesNotExists();
+
+        var assumedType = Util.assumeType(value);
+        if(!assumedType.equals(o.get().getType())){
+            throw new CellException.CellTypesDoNotMatch();
+        }
 
         Cell cell = o.get();
         cell.setValue(value);

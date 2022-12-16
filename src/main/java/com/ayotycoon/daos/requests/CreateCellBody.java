@@ -1,7 +1,10 @@
 package com.ayotycoon.daos.requests;
 
 import com.ayotycoon.enums.CellType;
+import com.ayotycoon.exceptions.CellException;
+import com.ayotycoon.utils.Util;
 import lombok.Data;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.List;
 
@@ -27,6 +30,11 @@ public class CreateCellBody {
             type = CellType.INT;
             return;
         }
+
+    }
+    public void setKey(String str) throws CellException.InvalidCellKey {
+        if(!Util.isValidKey(str)) throw new CellException.InvalidCellKey();
+       this.key = str.trim();
 
     }
 }
